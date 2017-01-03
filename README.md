@@ -26,7 +26,7 @@ All are built with D3 V4 on HTML5 Canvas using the Angular 2 cli (http://cli.ang
 
 3) Force Canvas+Zoom and Pan demonstrates Force Layout with dragging AND zoom and pan. To replicate error: zoom in, drag a node, and watch the node move faster than your mouse.
 
-4) Single Node Force Canvas+Zoom and Pan uses only a single node in the JSON data to simplify debugging. The browser console will some reporting of the dragged position of the node.
+4) Single Node Force Canvas+Zoom and Pan uses only a single node in the JSON data to simplify debugging. The browser console has some reporting of the dragged position of the node.
 
 ## Questions
 
@@ -36,6 +36,6 @@ In example 3 above, when zoomed in, why does a node not track the mouse dragging
 
 ### Secondary Questions:
 
-1) In the import 'import * as d3 from "d3";' the d3 is not recognized although I have npm installed d3 and the latest typings
+1) In the import 'import * as d3 from "d3";' the d3 is not recognized although I have npm installed d3 and the latest typings. I have run 'npm install d3-v4-typings'.
 
 2) When switching betten item 2) above ("Force Canvas") and item 3) above ("Force Canvas+Zoom and Pan"), the graph is almost (but not quite) identical, even after dragging items. Is the d3 model a singleton?
