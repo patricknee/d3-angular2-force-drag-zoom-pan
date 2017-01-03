@@ -20,9 +20,9 @@ This application was build to test a problem with zomming and panning a D3 Force
 
 All are built with D3 V4 on HTML5 Canvas using the Angular 2 cli (http://cli.angular.io).
 
-1) Zoom-Pan-Drag demonstrates gragging dots around the screen. This page is modifed from Drag & Zoom
+1) Zoom-Pan-Drag demonstrates gragging dots around the screen. This page is modifed from Drag & Zoom (https://bl.ocks.org/mbostock/2b534b091d80a8de39219dd076b316cd) for Angular 2 compatibility.
 
-2) Force Canvas demonstrates a Force Layout graph with dragging but no zoom and pan. This page is modifed from Force Dragging III, but nodes are locked in position after release.
+2) Force Canvas demonstrates a Force Layout graph with dragging but no zoom and pan. This page is modifed from Force Dragging III (http://bl.ocks.org/mbostock/ad70335eeef6d167bc36fd3c04378048), but nodes are locked in position after release.
 
 3) Force Canvas+Zoom and Pan demonstrates Force Layout with dragging AND zoom and pan. To replicate error: zoom in, drag a node, and watch the node move faster than your mouse.
 
@@ -36,5 +36,6 @@ In example 3 above, when zoomed in, why does a node not track the mouse dragging
 
 ### Secondary Questions:
 
-In the import 'import * as d3 from "d3";' the d3 is not recognized although I have npm installed d3 and the latest typings
-When switching betten item 2) above ("Force Canvas") and item 3) above ("Force Canvas+Zoom and Pan"), the graph is almost (but not quite) identical, even after dragging items. Is the d3 model a singleton?
+1) In the import 'import * as d3 from "d3";' the d3 is not recognized although I have npm installed d3 and the latest typings
+
+2) When switching betten item 2) above ("Force Canvas") and item 3) above ("Force Canvas+Zoom and Pan"), the graph is almost (but not quite) identical, even after dragging items. Is the d3 model a singleton?
