@@ -1,31 +1,40 @@
-# AngularD3
+
+# Sandbox for Angular 2 / D3!
 
 This project was generated with [angular-cli](https://github.com/angular/angular-cli) version 1.0.0-beta.21.
 
 ## Development server
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-## Code scaffolding
+## Installation
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive/pipe/service/class`.
+1) Clone to a directory.  
+2) CD into directory.  
+3) Run "npm install"  
+4) Run "ng serve"  
+5) Navigate browser to http://localhost:4200  
 
-## Build
+## Testing of Force Layout with D3  
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+This application was build to test a problem with zomming and panning a D3 Force Layout graph.
 
-## Running unit tests
+All are built with D3 V4 on HTML5 Canvas using the Angular 2 cli (http://cli.angular.io).
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+1) Zoom-Pan-Drag demonstrates gragging dots around the screen. This page is modifed from Drag & Zoom
 
-## Running end-to-end tests
+2) Force Canvas demonstrates a Force Layout graph with dragging but no zoom and pan. This page is modifed from Force Dragging III, but nodes are locked in position after release.
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-Before running the tests make sure you are serving the app via `ng serve`.
+3) Force Canvas+Zoom and Pan demonstrates Force Layout with dragging AND zoom and pan. To replicate error: zoom in, drag a node, and watch the node move faster than your mouse.
 
-## Deploying to Github Pages
+4) Single Node Force Canvas+Zoom and Pan uses only a single node in the JSON data to simplify debugging. The browser console will some reporting of the dragged position of the node.
 
-Run `ng github-pages:deploy` to deploy to Github Pages.
+## Questions
 
-## Further help
+### Primary Question:
 
-To get more help on the `angular-cli` use `ng --help` or go check out the [Angular-CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+In example 3 above, when zoomed in, why does a node not track the mouse dragging it? Zoom transformation is not correctly applied.
+
+### Secondary Questions:
+
+In the import 'import * as d3 from "d3";' the d3 is not recognized although I have npm installed d3 and the latest typings
+When switching betten item 2) above ("Force Canvas") and item 3) above ("Force Canvas+Zoom and Pan"), the graph is almost (but not quite) identical, even after dragging items. Is the d3 model a singleton?
