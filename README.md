@@ -24,7 +24,7 @@ All are built with D3 V4 on HTML5 Canvas using the Angular 2 cli (http://cli.ang
 
 2) Force Canvas demonstrates a Force Layout graph with dragging but no zoom and pan. This page is modifed from Force Dragging III (http://bl.ocks.org/mbostock/ad70335eeef6d167bc36fd3c04378048), but nodes are locked in position after release.
 
-3) Force Canvas+Zoom and Pan demonstrates Force Layout with dragging AND zoom and pan. To replicate error: zoom in, drag a node, and watch the node move faster than your mouse.
+3) Force Canvas+Zoom and Pan demonstrates Force Layout with dragging AND zoom and pan. **To replicate error: zoom in, drag a node, and watch the node move faster than your mouse.**
 
 4) Single Node Force Canvas+Zoom and Pan uses only a single node in the JSON data to simplify debugging. The browser console has some reporting of the dragged position of the node.
 
