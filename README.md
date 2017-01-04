@@ -14,11 +14,8 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app w
 4) Run "ng serve"  
 5) Navigate browser to http://localhost:4200  
 
-
-
 ## To replicate problem:
 Open "Force on Canvas + Zoom", zoom in, drag a node and watch node travel more than the mouse.</li>
-
 
 
 ## To replicate for debugging:
@@ -31,6 +28,7 @@ Open "Force on Canvas + Zoom", zoom in, drag a node and watch node travel more t
 6) Open single node version of <a routerLink="/forcecanvaszpon" routerLinkActive="active">Force Canvas+Zoom Pan</a>; a blue dot will be at the center (250, 100).  
 7) Repeat steps 3-5 with the blue dot on this view.  
 8) Compare the readouts at teh bottom of the canvas on the two views. The event on the Force Layout represents Model Space rather than Canvas Space. This seems to be the core of the problem.  
+
 
 ## Summary of pages
 
@@ -49,8 +47,7 @@ Further debugging suggest that when the drag().subject() handler uses simulation
 This is incontrast to the same point in the lifecycle of the Drag+Zoom example without force layout. Drag+Zoom has a "homespun" handler for drag().subject(). 
 Copying it into this project results in correct drag behavior when zoomed, but introduces other drawing problems.
 
-###Secondary Questions:
+###Secondary Question:
 
-1) In the import 'import * as d3 from "d3";' the d3 is not recognized although I have npm installed d3 and the latest typings  
-2) When switching betten item 2) above ("Force Canvas") and item 3) above ("Force Canvas+Zoom and Pan"), the graph is almost (but not quite) identical, even after dragging items. Is the d3 model a singleton?  
+When switching betten item 2) above ("Force Canvas") and item 3) above ("Force Canvas+Zoom and Pan"), the graph is almost (but not quite) identical, even after dragging items. Is the d3 model a singleton?  
 
