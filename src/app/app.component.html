@@ -2,22 +2,12 @@
   {{title}}
 </h3>
 
-  <a routerLink="/home" routerLinkActive="active">Home</a><br><br>
-<b>Projects used for reference (adapted for Angular 2):</b><br>
-  No bug => <a routerLink="/zoompandrag" routerLinkActive="active">Dots + Zoom (no bug)</a><br>
-  No bug => <a routerLink="/forcecanvas" routerLinkActive="active">Force on Canvas no Zoom (no bug)</a><br><br>
-<b>Project demonstrating bug and problematic solution:</b><br>
-    Has zoom bug => <a routerLink="/forcecanvaszp" routerLinkActive="active">Force on Canvas + Zoom (with zoom bug)</a><br>
-  Poor fix => <a routerLink="/forcecanvaszpwrk" routerLinkActive="active">Working Force on Canvas + Zoom (with drawing bugs)</a><br>
-<br>
-The poor fix uses drag().subject() handler adapted from Zoom-Pan-Drag below rather than simulation.find(). <br>
-The fix introduces significant drawing problems (flashing, everthing else disappearing), but the node follows the mouse.
-
-<br><br>
-
-  <b>For debugging: Single Node with Position Readouts: </b><br>
-  <a routerLink="/zoompandragon" routerLinkActive="active">Zoom-Pan-Drag</a><br>
-  <a routerLink="/forcecanvaszpon" routerLinkActive="active">Force Canvas+Zoom Pan</a>
+<nav>
+  <a routerLink="/home" routerLinkActive="active">Home</a>
+  <a routerLink="/zoompandrag" routerLinkActive="active">Dots + Zoom</a>
+  <a routerLink="/forcecanvas" routerLinkActive="active">Force Canvas no Zoom</a>
+  <a routerLink="/forcecanvaszpwrk" routerLinkActive="active">Force Canvas + Zoom</a>
+</nav>
 <hr>
 
 <router-outlet></router-outlet>

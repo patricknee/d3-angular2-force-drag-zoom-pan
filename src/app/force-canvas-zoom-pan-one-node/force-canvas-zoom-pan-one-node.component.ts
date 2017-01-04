@@ -100,8 +100,8 @@ export class ForceCanvasZoomPanOneNodeComponent implements OnInit {
       let dx2dy2 = dx * dx + dy * dy;
       console.log(dx, dy, dx2dy2, r2);
       if (dx2dy2< r2) {
-        point.x = this.transform.applyX(point[0]);
-        point.y = this.transform.applyY(point[1]);
+        point.x = this.transform.applyX(point.x);
+        point.y = this.transform.applyY(point.y);
         return point;
       }
     }
@@ -114,18 +114,18 @@ export class ForceCanvasZoomPanOneNodeComponent implements OnInit {
     console.log("d3.event.subject.fxy", d3.event.subject.fx, d3.event.subject.fy);
 
     if (!d3.event.active) this.simulation.alphaTarget(0.3).restart();
-    d3.event.subject.fx = this.transform.invertX(d3.event.subject.x);
-    d3.event.subject.fy = this.transform.invertY(d3.event.subject.y);
-    d3.event.subject.x = this.transform.invertX(d3.event.subject.x);
-    d3.event.subject.y = this.transform.invertY(d3.event.subject.y);
+    //d3.event.subject.fx = this.transform.invertX(d3.event.subject.x);
+    //d3.event.subject.fy = this.transform.invertY(d3.event.subject.y);
+    //d3.event.subject.x = this.transform.invertX(d3.event.subject.x);
+    //d3.event.subject.y = this.transform.invertY(d3.event.subject.y);
   }
 
   dragging() {
     //console.log("in node drag");
     d3.event.subject.fx = this.transform.invertX(d3.event.x);
     d3.event.subject.fy = this.transform.invertY(d3.event.y);
-    d3.event.subject.x = this.transform.invertX(d3.event.x);
-    d3.event.subject.y = this.transform.invertY(d3.event.y);
+    //d3.event.subject.x = this.transform.invertX(d3.event.x);
+    //d3.event.subject.y = this.transform.invertY(d3.event.y);
 
     this.eventX = d3.event.x;
     this.eventY = d3.event.y;
@@ -141,8 +141,8 @@ export class ForceCanvasZoomPanOneNodeComponent implements OnInit {
   endDrag() {
     console.log("-----end drag-----");
     if (!d3.event.active) this.simulation.alphaTarget(0);
-    d3.event.subject.fx = this.transform.invertX(d3.event.x);
-    d3.event.subject.fy = this.transform.invertY(d3.event.y);
+    //d3.event.subject.fx = this.transform.invertX(d3.event.x);
+    //d3.event.subject.fy = this.transform.invertY(d3.event.y);
   }
 
   zoomed() {
@@ -175,6 +175,8 @@ export class ForceCanvasZoomPanOneNodeComponent implements OnInit {
     this.jLesMis.nodes.forEach((d)=>{
       let cx = d.fx || d.x;
       let cy = d.fy || d.y;
+      cx = d.x;
+      cy = d.y;
       this.context.moveTo(cx + this.circleRadius, cy);
       this.context.arc(cx, cy, this.circleRadius, 0, 2 * Math.PI, false);
       this.context.fillStyle = "blue";

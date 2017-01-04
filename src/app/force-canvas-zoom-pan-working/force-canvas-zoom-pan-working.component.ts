@@ -103,25 +103,34 @@ export class ForceCanvasZoomPanWorkingComponent implements OnInit {
   }
 
   dragSubject() {
-    //let d = this.simulation.find(this.transform.invertX(d3.event.x), this.transform.invertY(d3.event.y), this.circleRadius);
-    //return d;
+    let i = 0,
+      n = this.jLesMis.nodes.length,
+      dx,
+      dy,
+      d2,
+      node,
+      closest;
+
+    let radius = this.circleRadius;
 
     let
       x = this.transform.invertX(d3.event.x),
       y = this.transform.invertY(d3.event.y);
 
-    for (let i = this.jLesMis.nodes.length - 1; i >= 0; --i) {
-      let point = this.jLesMis.nodes[i];
-      let dx = x - point.x;
-      let dy = y - point.y;
-      let r2 = this.circleRadius * this.circleRadius;
-      let dx2dy2 = dx * dx + dy * dy;
-      if (dx2dy2< r2) {
-        point.x = this.transform.applyX(point[0]);
-        point.y = this.transform.applyY(point[1]);
-        return point;
-      }
+    if (radius == null) radius = Infinity;
+    else radius *= radius;
+
+    for (i = 0; i < n; ++i) {
+      node = this.jLesMis.nodes[i];
+      dx = x - node.x;
+      dy = y - node.y;
+      d2 = dx * dx + dy * dy;
+      if (d2 < radius) closest = node, radius = d2;
     }
+
+    closest.x = this.transform.applyX(closest.x);
+    closest.y = this.transform.applyY(closest.y);
+    return closest;
   }
 
   redrawXYGraph() {
