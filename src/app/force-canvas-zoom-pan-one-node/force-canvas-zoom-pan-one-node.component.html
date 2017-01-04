@@ -4,6 +4,16 @@
 
 <div id="theCanvas">
   <table border="2"><tr><td>
-    <canvas id="mycanvaz" width="500" height="500"></canvas>
+    <canvas id="mycanvaz" width="500" height="200"></canvas>
   </td></tr></table>
+</div>
+
+
+<div *ngIf="eventX">
+  Event: {{eventX}}, {{eventY}} Invert: {{invertEventX}}, {{invertEventY}} Apply: {{applyEventX}}, {{applyEventY}}
+  <br><br>
+  Transform {{transformX}}, {{transformY}}, {{transformK}}
+</div>
+<div *ngIf="drawCircleX">
+  Draw Circle Center: {{drawCircleX}}, {{drawCircleY}}
 </div>

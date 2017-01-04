@@ -4,22 +4,23 @@ import { LesMisService } from '../les-mis.service';
 import * as d3 from "d3";
 
 @Component({
-  selector: 'app-force-canvas-zoom-pan',
-  templateUrl: './force-canvas-zoom-pan.component.html',
-  styleUrls: ['./force-canvas-zoom-pan.component.css']
+  selector: 'app-force-canvas-zoom-pan-working',
+  templateUrl: './force-canvas-zoom-pan-working.component.html',
+  styleUrls: ['./force-canvas-zoom-pan-working.component.css']
 })
-export class ForceCanvasZoomPanComponent implements OnInit {
+export class ForceCanvasZoomPanWorkingComponent implements OnInit {
 
   jLesMis: any;
-  canvas:any;
+  canvas: any;
   context: any;
   width: number;
   height: number;
-  simulation:any;
+  simulation: any;
   transform: any = d3.zoomIdentity;
   circleRadius: number = 5;
 
-  constructor(private lesmis: LesMisService) { }
+  constructor(private lesmis: LesMisService) {
+  }
 
   ngOnInit() {
     this.canvas = document.getElementById("mycanvaz");
@@ -27,13 +28,13 @@ export class ForceCanvasZoomPanComponent implements OnInit {
     this.width = this.canvas.width;
     this.height = this.canvas.height;
 
-    this.lesmis.getLesMis().then (
+    this.lesmis.getLesMis().then(
       (res) => {
         this.jLesMis = res;
         this.startForceGraph();
       },
-      (error) =>{
-        alert (error);
+      (error) => {
+        alert(error);
       }
     );
   }
@@ -42,14 +43,16 @@ export class ForceCanvasZoomPanComponent implements OnInit {
     console.log("in startGraph");
 
     this.simulation = d3.forceSimulation()
-      .force("link", d3.forceLink().id(function(d) { return d['id']; }))
+      .force("link", d3.forceLink().id(function (d) {
+        return d['id'];
+      }))
       .force("charge", d3.forceManyBody())
       .force("center", d3.forceCenter(this.width / 2, this.height / 2))
     ;
 
     this.simulation
       .nodes(this.jLesMis.nodes)
-      .on("tick", ()=> {
+      .on("tick", () => {
         this.redrawXYGraph();
       })
       .on("end", () => {
@@ -71,7 +74,7 @@ export class ForceCanvasZoomPanComponent implements OnInit {
         .on("end", () => this.dragEnd()))
 
       .call(d3.zoom()
-        .scaleExtent([ 1/4, 4])
+        .scaleExtent([1 / 4, 4])
         .on("zoom", () => {
           this.transform = d3.event.transform;
           this.redrawXYGraph();
@@ -82,26 +85,43 @@ export class ForceCanvasZoomPanComponent implements OnInit {
   dragStart() {
     console.log("in dragstart");
     if (!d3.event.active) this.simulation.alphaTarget(0.3).restart();
-    d3.event.subject.fx = (d3.event.subject.x);
-    d3.event.subject.fy = (d3.event.subject.y);
+    d3.event.subject.fx = this.transform.invertX(d3.event.subject.x);
+    d3.event.subject.fy = this.transform.invertY(d3.event.subject.y);
   }
 
   dragged() {
     console.log("in drag");
-    d3.event.subject.fx = (d3.event.x);
-    d3.event.subject.fy = (d3.event.y);
+    d3.event.subject.fx = this.transform.invertX(d3.event.x);
+    d3.event.subject.fy = this.transform.invertY(d3.event.y);
   }
 
   dragEnd() {
     console.log("in dragend");
     if (!d3.event.active) this.simulation.alphaTarget(0);
-    d3.event.subject.fx = d3.event.x;
-    d3.event.subject.fy = d3.event.y;
+    d3.event.subject.fx = this.transform.invertX(d3.event.x);
+    d3.event.subject.fy = this.transform.invertY(d3.event.y);
   }
 
   dragSubject() {
-    let d = this.simulation.find( this.transform.invertX(d3.event.x), this.transform.invertY(d3.event.y), this.circleRadius);
-    return d;
+    //let d = this.simulation.find(this.transform.invertX(d3.event.x), this.transform.invertY(d3.event.y), this.circleRadius);
+    //return d;
+
+    let
+      x = this.transform.invertX(d3.event.x),
+      y = this.transform.invertY(d3.event.y);
+
+    for (let i = this.jLesMis.nodes.length - 1; i >= 0; --i) {
+      let point = this.jLesMis.nodes[i];
+      let dx = x - point.x;
+      let dy = y - point.y;
+      let r2 = this.circleRadius * this.circleRadius;
+      let dx2dy2 = dx * dx + dy * dy;
+      if (dx2dy2< r2) {
+        point.x = this.transform.applyX(point[0]);
+        point.y = this.transform.applyY(point[1]);
+        return point;
+      }
+    }
   }
 
   redrawXYGraph() {
@@ -115,7 +135,7 @@ export class ForceCanvasZoomPanComponent implements OnInit {
       this.context.scale(this.transform.k, this.transform.k);
     }
 
-    this.jLesMis.links.forEach((d)=>{
+    this.jLesMis.links.forEach((d) => {
       this.context.moveTo(d.source.x, d.source.y);
       this.context.lineTo(d.target.x, d.target.y);
     });
@@ -123,10 +143,12 @@ export class ForceCanvasZoomPanComponent implements OnInit {
     this.context.stroke();
 
     this.context.beginPath();
-    this.jLesMis.nodes.forEach((d)=>{
-      this.context.moveTo(d.x + this.circleRadius, d.y);
-      this.context.arc(d.x, d.y, this.circleRadius, 0, 2 * Math.PI, false);
-      this.context.fillStyle = "black";
+    this.jLesMis.nodes.forEach((d) => {
+      let cx = d.fx || d.x;
+      let cy = d.fy || d.y;
+      this.context.moveTo(cx + this.circleRadius, cy);
+      this.context.arc(cx, cy, this.circleRadius, 0, 2 * Math.PI, false);
+      this.context.fillStyle = "blue";
       this.context.fill();
     });
     this.context.stroke();

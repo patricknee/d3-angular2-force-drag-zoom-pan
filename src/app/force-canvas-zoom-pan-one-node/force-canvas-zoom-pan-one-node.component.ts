@@ -19,6 +19,19 @@ export class ForceCanvasZoomPanOneNodeComponent implements OnInit {
   transform: any = d3.zoomIdentity;
   circleRadius: number = 5;
 
+
+  eventX: number;
+  eventY: number;
+  invertEventX: number;
+  invertEventY: number;
+  applyEventX: number;
+  applyEventY: number;
+  transformX: number;
+  transformY: number;
+  transformK: number;
+  drawCircleX: number;
+  drawCircleY: number;
+
   constructor(private lesmis: LesMisService) { }
 
   ngOnInit() {
@@ -30,20 +43,6 @@ export class ForceCanvasZoomPanOneNodeComponent implements OnInit {
     //force the graph to have just one node:
     this.jLesMis = { "nodes": [ {"id": "Myriel", "group": 1}], "links": [] } ;
     this.startForceGraph();
-
-    /*
-    this.lesmis.getLesMis().then (
-      (res) => {
-        this.jLesMis = res;
-        //force the graph to have just one node:
-        this.jLesMis = { "nodes": [ {"id": "Myriel", "group": 1}], "links": [] } ;
-        this.startForceGraph();
-      },
-      (error) =>{
-        alert (error);
-      }
-    );
-    */
   }
 
   startForceGraph() {
@@ -72,50 +71,86 @@ export class ForceCanvasZoomPanOneNodeComponent implements OnInit {
     d3.select(this.canvas)
 
       .call(d3.drag()
-        .container(this.canvas)
-        .subject(() => {
-          let d = this.simulation.find( this.transform.invertX(d3.event.x), this.transform.invertY(d3.event.y), this.circleRadius);
-          console.log("sim.find(d)=");
-          console.log(d);
-          console.log("d3.event", d3.event.x, d3.event.y);
-          console.log("invertX.d3.event", this.transform.invertX(d3.event.x), this.transform.invertY(d3.event.y));
-          console.log("---find end----");
-          return d;
-        })
-        .on("start", () => {
-          console.log("in dragstart");
-          if (!d3.event.active) this.simulation.alphaTarget(0.3).restart();
-
-          d3.event.subject.fx = (d3.event.subject.x);
-          d3.event.subject.fy = (d3.event.subject.y);
-          console.log("d3.event.subject", d3.event.subject.fx, d3.event.subject.fy);
-        })
-        .on("drag", () => {
-          console.log("in drag");
-          console.log("d3.event.subject", d3.event.subject.fx, d3.event.subject.fy);
-          console.log("d3.event.x", d3.event.x, d3.event.y);
-          console.log("invertX(d3.event.x)", this.transform.invertX(d3.event.x), this.transform.invertY(d3.event.y));
-          console.log("apply(d3.event.x)", this.transform.applyX(d3.event.x), this.transform.applyY(d3.event.y));
-          console.log("----");
-          d3.event.subject.fx = (d3.event.x);
-          d3.event.subject.fy = (d3.event.y);
-        })
-        .on("end", () => {
-          console.log("in dragend");
-          if (!d3.event.active) this.simulation.alphaTarget(0);
-          d3.event.subject.fx = (d3.event.x);
-          d3.event.subject.fy = (d3.event.y);
-        }))
-
+        .subject( () => this.dragSubject())
+        .on("start", () => this.startDrag())
+        .on("drag", () => this.dragging())
+        .on("end", () => this.endDrag()))
 
       .call(d3.zoom()
         .scaleExtent([ 1/4, 4])
-        .on("zoom", () => {
-          this.transform = d3.event.transform;
-          this.redrawXYGraph();
-        }))
-
+        .on("zoom", () => this.zoomed()))
     ;
+  }
+
+  dragSubject() {
+    console.log("subject event: " + d3.event.x + ", " + d3.event.y);
+    //let d = this.simulation.find( this.transform.invertX(d3.event.x), this.transform.invertY(d3.event.y), this.circleRadius);
+    //return d;
+
+    let
+      x = this.transform.invertX(d3.event.x),
+      y = this.transform.invertY(d3.event.y);
+
+    for (let i = this.jLesMis.nodes.length - 1; i >= 0; --i) {
+      let point = this.jLesMis.nodes[i];
+      console.log(point);
+      let dx = x - point.x;
+      let dy = y - point.y;
+      let r2 = this.circleRadius * this.circleRadius;
+      let dx2dy2 = dx * dx + dy * dy;
+      console.log(dx, dy, dx2dy2, r2);
+      if (dx2dy2< r2) {
+        point.x = this.transform.applyX(point[0]);
+        point.y = this.transform.applyY(point[1]);
+        return point;
+      }
+    }
+  }
+
+  startDrag() {
+    console.log("in node dragstart");
+    console.log("d3.event", d3.event.x, d3.event.y);
+    console.log("d3.event.subject.xy", d3.event.subject.x, d3.event.subject.y);
+    console.log("d3.event.subject.fxy", d3.event.subject.fx, d3.event.subject.fy);
+
+    if (!d3.event.active) this.simulation.alphaTarget(0.3).restart();
+    d3.event.subject.fx = this.transform.invertX(d3.event.subject.x);
+    d3.event.subject.fy = this.transform.invertY(d3.event.subject.y);
+    d3.event.subject.x = this.transform.invertX(d3.event.subject.x);
+    d3.event.subject.y = this.transform.invertY(d3.event.subject.y);
+  }
+
+  dragging() {
+    //console.log("in node drag");
+    d3.event.subject.fx = this.transform.invertX(d3.event.x);
+    d3.event.subject.fy = this.transform.invertY(d3.event.y);
+    d3.event.subject.x = this.transform.invertX(d3.event.x);
+    d3.event.subject.y = this.transform.invertY(d3.event.y);
+
+    this.eventX = d3.event.x;
+    this.eventY = d3.event.y;
+    this.invertEventX = this.transform.invertX(d3.event.x);
+    this.invertEventY = this.transform.invertY(d3.event.y);
+    this.applyEventX = this.transform.applyX(d3.event.x);
+    this.applyEventY = this.transform.applyY(d3.event.y);
+    this.transformX = this.transform.x;
+    this.transformY = this.transform.y;
+    this.transformK = this.transform.k;
+  }
+
+  endDrag() {
+    console.log("-----end drag-----");
+    if (!d3.event.active) this.simulation.alphaTarget(0);
+    d3.event.subject.fx = this.transform.invertX(d3.event.x);
+    d3.event.subject.fy = this.transform.invertY(d3.event.y);
+  }
+
+  zoomed() {
+    this.transform = d3.event.transform;
+    this.redrawXYGraph();
+    this.transformX = this.transform.x;
+    this.transformY = this.transform.y;
+    this.transformK = this.transform.k;
   }
 
   redrawXYGraph() {
@@ -138,11 +173,16 @@ export class ForceCanvasZoomPanOneNodeComponent implements OnInit {
 
     this.context.beginPath();
     this.jLesMis.nodes.forEach((d)=>{
-      this.context.moveTo(d.x + this.circleRadius, d.y);
-      this.context.arc(d.x, d.y, this.circleRadius, 0, 2 * Math.PI, false);
-      this.context.fillStyle = "black";
+      let cx = d.fx || d.x;
+      let cy = d.fy || d.y;
+      this.context.moveTo(cx + this.circleRadius, cy);
+      this.context.arc(cx, cy, this.circleRadius, 0, 2 * Math.PI, false);
+      this.context.fillStyle = "blue";
       this.context.fill();
+      this.drawCircleX = cx;
+      this.drawCircleY = cy;
     });
+
     this.context.stroke();
     this.context.restore();
   }
